@@ -1,0 +1,84 @@
+<div class="row">
+  <div>
+    <div class="btn-group">
+      <button
+        type="button"
+        class="btn btn-danger dropdown-toggle"
+        data-bs-toggle="dropdown"
+        aria-expanded="false"
+      >
+        <span *ngIf="years?.length === 0">Années</span>
+        <span *ngIf="years?.length !== 0">{{ yearSelected }}</span>
+      </button>
+      <ul class="dropdown-menu">
+        <a
+          class="dropdown-item"
+          *ngFor="let year of years"
+          (click)="onChangeYear(year)"
+          ><li>{{ year }}</li></a
+        >
+      </ul>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-5">
+    <div
+      class="card shadow-sm mt-2"
+      style="cursor: pointer"
+      *ngFor="let theme of themes; let i = index"
+      (click)="onClickTheme(theme)"
+    >
+      <div class="card-body">
+        <div class="row">
+          <div class="col-md-2">
+            <img
+              src="assets/img/layout.png"
+              style="height: 40px; width: 40px"
+            />
+          </div>
+          <div class="col-md-7 mt-1" style="cursor: pointer">
+            Jour {{ i + 1 }} - {{ theme.title }}
+          </div>
+
+          <div class="col-md-1" *ngIf="authService.isAdmin()">
+            <button
+              class="btn btn-warning btn-sm mr-2"
+              (click)="editTheme(theme)"
+            >
+              <mat-icon style="cursor: pointer">edit</mat-icon>
+            </button>
+          </div>
+          <div class="col-md-1" *ngIf="authService.isAdmin()">
+            <button
+              class="btn btn-danger btn-sm ml-1"
+              (click)="deleteTheme(theme)"
+            >
+              <mat-icon style="cursor: pointer">close</mat-icon>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button
+      class="btn btn-secondary btn-block mt-3"
+      (click)="addTheme()"
+      *ngIf="authService.isAdmin()"
+    >
+      Ajouter
+    </button>
+  </div>
+  <div class="col-md-6">
+    <app-level-statement-tabs
+      class="mt-5"
+      *ngIf="themesSelected"
+      [idTheme]="themesSelected.idTheme"
+    ></app-level-statement-tabs>
+
+    <div *ngIf="!themesSelected">
+      <div class="card">
+        <img src="assets/img/ill/ill-2.svg" alt="" />
+      </div>
+    </div>
+  </div>
+</div>

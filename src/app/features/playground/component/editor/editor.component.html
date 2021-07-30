@@ -1,0 +1,52 @@
+<div class="row justify-content-end">
+  <div class="col-md-5 pull-right">
+    <button
+      type="button"
+      class="btn btn-primary dropdown-toggle"
+      data-bs-toggle="dropdown"
+      aria-expanded="false"
+    >
+      {{ themeSelected?.name }}
+    </button>
+    <ul class="dropdown-menu">
+      <a
+        *ngFor="let theme of themeList; let i = index"
+        (click)="onChangeTheme(theme)"
+        class="dropdown-item"
+        ><li>
+          {{ theme.name }}
+        </li></a
+      >
+    </ul>
+
+    <button
+      type="button"
+      class="btn btn-danger dropdown-toggle"
+      data-bs-toggle="dropdown"
+      aria-expanded="false"
+    >
+      {{ programingLanguageSelected?.name }}
+    </button>
+    <ul class="dropdown-menu">
+      <a
+        *ngFor="let programmingLanguage of programmingLanguages; let i = index"
+        (click)="onChangeProgrammingLanguage(programmingLanguage)"
+        class="dropdown-item"
+        ><li>
+          {{ programmingLanguage.name }}
+        </li>
+      </a>
+    </ul>
+  </div>
+</div>
+
+<div class="row mt-3">
+  <div class="col-md-12">
+    <div
+      class="app-ace-editor"
+      #editor
+      style="width: 100%; height: 648px"
+    ></div>
+    <ng-content></ng-content>
+  </div>
+</div>

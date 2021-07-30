@@ -1,0 +1,62 @@
+<div class="modal-body">
+  <div class="container">
+    <form [formGroup]="themeGroup" (ngSubmit)="addTheme()">
+      <div class="row">
+        <div class="col-md-5">
+          <div class="form-group">
+            <label>Titre </label>
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Titre"
+              [formControl]="titleCtrl"
+            />
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="input-group input-group-alternative">
+          <div class="input-group-prepend">
+            <span class="input-group-text"
+              ><i class="ni ni-calendar-grid-58"></i
+            ></span>
+          </div>
+          <input
+            class="form-control datepicker"
+            placeholder="Date"
+            type="text"
+            readonly="true"
+            [formControl]="dateAffectedCtrl"
+            ngbDatepicker
+            #d="ngbDatepicker"
+            (click)="d.toggle()"
+            [ngClass]="{
+              'is-invalid': formService.isInvalid(dateAffectedCtrl),
+              'is-valid': formService.isValid(dateAffectedCtrl)
+            }"
+          />
+        </div>
+      </div>
+
+      <button
+        *ngIf="theme === undefined"
+        class="btn btn-primary mt-1"
+        type="button"
+        (click)="addTheme()"
+        [disabled]="themeGroup.invalid"
+      >
+        Sauvegarder
+      </button>
+      <button
+        *ngIf="theme !== undefined"
+        class="btn btn-primary mt-1"
+        type="button"
+        (click)="updateTheme()"
+        [disabled]="themeGroup.invalid"
+      >
+        Mettre à jour
+      </button>
+    </form>
+  </div>
+</div>

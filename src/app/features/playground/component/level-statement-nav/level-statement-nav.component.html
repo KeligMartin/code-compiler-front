@@ -1,0 +1,26 @@
+<ul
+  class="nav nav-pills nav-fill flex-column flex-md-row"
+  id="tabs-icons-text"
+  role="tablist"
+>
+  <li class="nav-item" *ngFor="let statementElem of statementLevel">
+    <a
+      class="nav-link mb-md-0 text-white"
+      [ngClass]="{
+        ' active ': statementElem.idStatement === statement?.idStatement,
+        'bg-danger':
+          isResolved(statementElem.userResponses) === false ||
+          isResolvedCompilation() === false,
+        'bg-success':
+          isResolved(statementElem.userResponses) === true ||
+          isResolvedCompilation() === true,
+        'bg-primary': isResolved(statementElem.userResponses) === undefined
+      }"
+      id="pills-home-tab"
+      data-bs-toggle="pill"
+      data-bs-target="#pills-home"
+      [routerLink]="['/playground', statementElem.idStatement]"
+      >{{ statementElem.level.name }}
+    </a>
+  </li>
+</ul>

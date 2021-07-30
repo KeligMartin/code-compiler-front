@@ -1,0 +1,11 @@
+<ul class="list-group shadow mt-3">
+  <li class="list-group-item"> Code status :
+    <span *ngIf="getStatus() === 'AWESOME'" class="font-weight-600 text-success">{{getStatus()}}</span>
+    <span *ngIf="getStatus() === 'GOOD'" class="font-weight-600 text-warning">{{getStatus()}}</span>
+    <span *ngIf="getStatus() === 'BAD'" class="font-weight-600 text-danger">{{getStatus()}}</span>
+  </li>
+  <li class="list-group-item" *ngFor="let error of codeQuality?.errors">
+    {{ error }}
+  </li>
+  <li class="list-group-item">Total points earned : {{ codeQuality?.gain }}</li>
+</ul>

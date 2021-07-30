@@ -1,0 +1,47 @@
+<div class="card shadow mt-3">
+  <!-- TODO recuperer tout les tests cases juste le nombre et le nom sans contenu -->
+  <!-- pour chaque test case regarder  verifier si c'est resolue si ce n'est pas resolue ou qu'il y'a une erreur s'arreter et bloquer les autres tests cases-->
+
+  <mat-vertical-stepper [linear]="true">
+    <mat-step
+      *ngFor="let testCase of testsCases; let i = index"
+      [completed]="!getCompileResponse(i)?.error"
+    >
+      <ng-template matStepLabel
+        ><span
+          [ngClass]="{
+            'text-danger':
+              getCompileResponse(i)?.error === true ||
+              getCompileResponse(i)?.resolved === false ||
+              isResolved(statement.userResponses) === false,
+            'text-success':
+              getCompileResponse(i)?.error === false ||
+              getCompileResponse(i)?.resolved === true ||
+              isResolved(statement.userResponses) === true
+          }"
+          >Cas de tests {{ i + 1 }}
+        </span></ng-template
+      >
+      <ng-container matStepContent>
+        <div *ngIf="compileResponses[i]">
+          <h4>Sortie</h4>
+          <h5>{{ compileResponses[i]?.executionTime }} milisecond</h5>
+          <pre
+            class="bg-dark text-white p-3"
+          > <code>{{ compileResponses[i].output }}</code></pre>
+        </div>
+
+        <h4>Sortie demandé</h4>
+        <pre
+          class="bg-dark text-white p-3"
+        > <code>{{ replaceAll(testCase.expectedOutput)}}</code></pre>
+      </ng-container>
+    </mat-step>
+  </mat-vertical-stepper>
+  <ng-template matStepperIcon="edit" let-index="index">
+    <mat-icon></mat-icon>
+  </ng-template>
+  <ng-template matStepperIcon="done">
+    <mat-icon>done_all</mat-icon>
+  </ng-template>
+</div>

@@ -1,0 +1,106 @@
+<!-- TODO si il on le mm niveau alors ils auront le mm puls ajouter un id -->
+
+<ng-container *ngIf="statements.length != 0">
+  <ul
+    class="nav nav-pills nav-fill flex-column flex-md-row mt-2"
+    id="tabs-icons-text"
+    role="tablist"
+  >
+    <li
+      class="nav-item"
+      *ngFor="let statement of statements; let index = index"
+    >
+      <a
+        class="nav-link mb-md-0 text-white"
+        [ngClass]="{
+          ' active ': index == 0,
+          'bg-danger': isResolved(statement.userResponses) === false,
+          'bg-success': isResolved(statement.userResponses) === true,
+          'bg-primary': isResolved(statement.userResponses) === undefined
+        }"
+        id="pills-{{ statement.idStatement.toLowerCase() }}-tab"
+        data-bs-toggle="pill"
+        [attr.data-bs-target]="'#pills-' + statement.idStatement.toLowerCase()"
+        [attr.aria-controls]="'pills-' + statement.idStatement.toLowerCase()"
+      >
+        <!-- if admin -->
+        {{ statement.level.name }}
+      </a>
+    </li>
+  </ul>
+  <div class="card shadow mt-3">
+    <div class="card-body">
+      <div class="tab-content" id="pills-tabContent">
+        <div
+          *ngFor="let statement of statements; let index = index"
+          [ngClass]="{ 'active  show ': index == 0 }"
+          class="tab-pane fade"
+          id="pills-{{ statement.idStatement.toLowerCase() }}"
+          role="tabpanel"
+          [attr.aria-labelledby]="
+            'pills-' + statement.idStatement.toLowerCase() + '-tab'
+          "
+        >
+          <div class="row">
+            <div class="col-md-12 nl2br overflow-statement">
+              {{ statement.description }}
+              <br/>
+              <div *ngIf="getStatus() === 'AWESOME'" class="badge badge-pill badge-success font-weight-600">{{getStatus()}}</div>
+              <div *ngIf="getStatus() === 'GOOD'" class="badge badge-pill badge-warning font-weight-600">{{getStatus()}}</div>
+              <div *ngIf="getStatus() === 'BAD'" class="badge badge-pill badge-danger font-weight-600">{{getStatus()}}</div>
+              <div *ngIf="isResolved(statement.userResponses)" class="badge badge-pill badge-success font-weight-600">resolved</div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-3">
+              <button
+                type="button"
+                class="btn btn-primary mt-3"
+                [routerLink]="['/playground', statement.idStatement]"
+              >
+                Coder
+              </button>
+            </div>
+            <div class="col-md-4" *ngIf="authService.isAdmin()">
+              <button
+                class="btn btn-warning mt-3"
+                [routerLink]="[
+                  '/statement/theme/',
+                  statement.theme.idTheme,
+                  'statement',
+                  statement.idStatement
+                ]"
+              >
+                Modifier
+              </button>
+            </div>
+            <div class="col-md-4" *ngIf="authService.isAdmin()">
+              <button
+                class="btn btn-danger mt-3 mr-3"
+                (click)="deleteStatement(statement.idStatement)"
+              >
+                Supprimer
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TODO ajout des stats de cette statement accomplie ?  -->
+</ng-container>
+<ng-container *ngIf="statements.length === 0">
+  <div class="card shadow mt-3">
+    <div class="card-body">
+      <div>Aucune enoncé pour ce theme</div>
+    </div>
+  </div>
+</ng-container>
+<button
+  [routerLink]="['/statement/theme', idTheme]"
+  class="btn btn-secondary mt-3 btn-block"
+  *ngIf="authService.isAdmin()"
+>
+  Ajouter
+</button>

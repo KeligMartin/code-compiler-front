@@ -1,0 +1,44 @@
+<div class="row">
+  <div class="col-md-4">
+    <app-level-statement-nav
+      *ngIf="statement && statement.theme.idTheme && editorComponent"
+      [idTheme]="statement.theme.idTheme"
+      [statement]="statement"
+      [compileResponses]="compileResponses"
+      [language]="editorComponent.programingLanguageSelected.language"
+    ></app-level-statement-nav>
+    <app-statement *ngIf="statement" [statement]="statement"></app-statement>
+    <app-tests-cases
+      *ngIf="statement && editorComponent"
+      [statement]="statement"
+      [language]="editorComponent.programingLanguageSelected.language"
+      [compileResponses]="compileResponses"
+    ></app-tests-cases>
+
+    <app-code-quality
+      *ngIf="statement && statement.userResponses.length > 0 && editorComponent"
+      [codeQualityId]="codeQualityId"
+      [userResponses]="statement.userResponses"
+      [language]="editorComponent.programingLanguageSelected.language"
+    ></app-code-quality>
+  </div>
+  <div class="col-md-8">
+    <app-editor *ngIf="statement" [statement]="statement">
+      <button
+        class="btn btn-primary pos-button"
+        type="button"
+        [disabled]="loading"
+        (click)="compileClick()"
+      >
+        <span
+          *ngIf="loading"
+          class="spinner-border spinner-border-sm"
+          role="status"
+          aria-hidden="true"
+        ></span>
+        <span *ngIf="loading"> Compilation... </span>
+        <span *ngIf="!loading"> Exécuter </span>
+      </button>
+    </app-editor>
+  </div>
+</div>

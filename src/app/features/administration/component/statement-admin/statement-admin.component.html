@@ -1,0 +1,236 @@
+<div class="container">
+  <form [formGroup]="statementGroup" (ngSubmit)="submitStatement()">
+    <div class="row">
+      <div class="col-md-5">
+        <div class="form-group">
+          <label for="exampleFormControlTextarea1">Titre </label>
+          <input
+            type="text"
+            class="form-control"
+            placeholder="Titre"
+            [formControl]="titleCtrl"
+          />
+        </div>
+      </div>
+      <div class="col-md-5">
+        <div class="form-group">
+          <label for="exampleFormControlTextarea1">Niveau </label>
+          <select [formControl]="levelCtrl" class="form-control">
+            <option>Niveaux</option>
+            <option *ngFor="let level of levels" [value]="level.id">
+              {{ level.name }}
+            </option>
+          </select>
+        </div>
+      </div>
+      <div class="col-md-2 mt-1">
+        <button
+          type="button"
+          class="btn btn-danger dropdown-toggle mt-4"
+          data-bs-toggle="dropdown"
+          aria-expanded="false"
+        >
+          {{ programingLanguageSelected?.name }}
+        </button>
+        <ul class="dropdown-menu">
+          <a
+            *ngFor="
+              let programmingLanguage of programmingLanguages;
+              let i = index
+            "
+            (click)="onChangeProgrammingLanguage(programmingLanguage)"
+            class="dropdown-item"
+            ><li>
+              {{ programmingLanguage.name }}
+            </li>
+          </a>
+        </ul>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="form-group">
+        <label for="exampleFormControlTextarea1">Description </label>
+        <textarea
+          class="form-control"
+          id="exampleFormControlTextarea1"
+          rows="3"
+          [formControl]="descriptionCtrl"
+        ></textarea>
+      </div>
+    </div>
+
+    <button
+      *ngIf="idStatement === undefined"
+      class="btn btn-primary mt-1"
+      type="button"
+      (click)="submitStatement()"
+      [disabled]="statementGroup.invalid"
+    >
+      Sauvegarder
+    </button>
+    <button
+      *ngIf="idStatement !== undefined"
+      class="btn btn-primary mt-1"
+      type="button"
+      (click)="updateStatement()"
+      [disabled]="statementGroup.invalid"
+    >
+      Mettre à jour
+    </button>
+
+    <!--TODO Ajout button ajouter ou mettre a jour en fonction de si id statement existe hide if statement ='' -->
+  </form>
+  <div [ngClass]="{ ' d-none ': idStatement === undefined }">
+    <ul
+      class="nav nav-pills nav-fill flex-column flex-md-row mt-2"
+      id="tabs-icons-text"
+      role="tablist"
+    >
+      <li class="nav-item">
+        <a
+          class="nav-link mb-md-0 active"
+          id="pills-skeleton-tab"
+          data-bs-toggle="pill"
+          [attr.data-bs-target]="'#pills-skeleton'"
+          [attr.aria-controls]="'pills-skeleton'"
+          [attr.aria-selected]="false"
+          ><i class="ni ni-cloud-upload-96 mr-2"></i>Squelette de la fonction</a
+        >
+      </li>
+
+      <li class="nav-item">
+        <a
+          class="nav-link mb-md-0"
+          id="pills-testCase-tab"
+          data-bs-toggle="pill"
+          [attr.data-bs-target]="'#pills-testCase'"
+          [attr.aria-controls]="'pills-testCase'"
+          [attr.aria-selected]="false"
+          ><i class="ni ni-cloud-upload-96 mr-2"></i>Cas de test</a
+        >
+      </li>
+    </ul>
+
+    <div class="card shadow mt-3">
+      <div class="card-body">
+        <div class="tab-content" id="pills-tabContent">
+          <div
+            id="pills-skeleton"
+            role="tabpanel"
+            class="tab-pane fade active show"
+            [attr.aria-labelledby]="'pills-skeleton-tab'"
+          >
+            <div class="row">
+              <div class="col-md-12">
+                <div
+                  class="app-ace-editor"
+                  #placeholder
+                  style="width: 100%; height: 300px"
+                ></div>
+                <button
+                  [disabled]="placeholderEditor?.getValue() === ''"
+                  *ngIf="placeholderFunction !== undefined"
+                  class="btn btn-primary mt-1 pos-button"
+                  type="button"
+                  (click)="updatePlaceholder()"
+                >
+                  Mettre a jour
+                </button>
+                <button
+                  [disabled]="placeholderEditor?.getValue() === ''"
+                  *ngIf="placeholderFunction === undefined"
+                  class="btn btn-primary mt-1 pos-button"
+                  type="button"
+                  (click)="submitPlaceholderFunction()"
+                >
+                  Sauvegarder
+                </button>
+              </div>
+            </div>
+          </div>
+          <div
+            class="tab-pane fade"
+            id="pills-testCase"
+            role="tabpanel"
+            [attr.aria-labelledby]="'pills-testCase-tab'"
+          >
+            <div class="row">
+              <div class="col-md-3">
+                <ul class="list-group">
+                  <a
+                    class="list-group-item list-group-item-action"
+                    [ngClass]="{
+                      ' list-group-item-warning ':
+                        testCase.idTestCase === idTestCaseSelected
+                    }"
+                    *ngFor="let testCase of testsCases; let i = index"
+                    (click)="modifyTestCase(testCase.idTestCase || '')"
+                  >
+                    Cas de test {{ i }}
+                    <span
+                      class="float-end mb-1"
+                      (click)="deleteTestCase(testCase.idTestCase || '')"
+                    >
+                      <mat-icon color="accent">close</mat-icon>
+                    </span>
+                  </a>
+                  <a (click)="newTestCase()" class="list-group-item">
+                    Nouveau cas de test
+                  </a>
+                </ul>
+              </div>
+              <div class="col-md-9">
+                <div class="col-md-12">
+                  <div
+                    class="app-ace-editor"
+                    #main
+                    style="width: 100%; height: 300px"
+                  ></div>
+                  <input
+                    type="text"
+                    class="form-control mt-1"
+                    [formControl]="expectedOutputCtrl"
+                    placeholder="Sortie  attendue "
+                  />
+                  <button
+                    *ngIf="idTestCaseSelected === ''"
+                    class="btn btn-primary mt-1"
+                    type="button"
+                    (click)="addTestCase()"
+                    [disabled]="
+                      mainEditor?.getValue()?.trim() === '' ||
+                      expectedOutputCtrl.value === ''
+                    "
+                  >
+                    Sauvegarder
+                  </button>
+                  <button
+                    *ngIf="idTestCaseSelected !== ''"
+                    class="btn btn-primary mt-1"
+                    type="button"
+                    (click)="updateTestCase()"
+                    [disabled]="
+                      mainEditor?.getValue()?.trim() === '' ||
+                      expectedOutputCtrl.value === ''
+                    "
+                  >
+                    Mettre a jour
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card-footer">
+        <button
+          class="btn-danger btn"
+          (click)="deletePlaceholderFunctionAndTestsCases()"
+        >
+          Supprimer l'enoncé pour {{ programingLanguageSelected.name }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
